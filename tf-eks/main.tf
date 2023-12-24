@@ -14,6 +14,17 @@ module "eks" {
   cluster_version                = local.cluster_version
   cluster_endpoint_public_access = true
 
+  # IPV6
+  cluster_ip_family = "ipv6"
+
+  # We are using the IRSA created below for permissions
+  # However, we have to deploy with the policy attached FIRST (when creating a fresh cluster)
+  # and then turn this off after the cluster/node group is created. Without this initial policy,
+  # the VPC CNI fails to assign IPs and nodes cannot join the cluster
+  # See https://github.com/aws/containers-roadmap/issues/1666 for more context
+  # TODO - remove this policy once AWS releases a managed version similar to AmazonEKS_CNI_Policy (IPv4)
+  create_cni_ipv6_iam_policy = true
+
   cluster_addons = {
     coredns = {
       most_recent = true
@@ -54,26 +65,33 @@ module "eks" {
 
   eks_managed_node_groups = {
     # Default node group - as provided by AWS EKS
-    default_node_group = {
+    karpenter = {
       # By default, the module creates a launch template to ensure tags are propagated to instances, etc.,
       # so we need to disable it to use the default template provided by the AWS EKS managed node group service
       use_custom_launch_template = false
 
-      name            = "karpenter"
+      name            = "karpenter-01"
       use_name_prefix = false
+      description     = "Karpenter - EKS managed node group"
 
-      instance_types = ["m7i.large", "m7i-flex.large", "m6i.large"]
-      capacity_type  = "SPOT"
+      instance_types       = ["m7i.large", "m7i-flex.large"]
+      force_update_version = true
+      capacity_type        = "SPOT"
 
       min_size     = 2
       max_size     = 2
       desired_size = 2
 
+      ami_id = data.aws_ami.eks_default.image_id
+
       subnet_ids = module.vpc.private_subnets
 
       description = "Karpenter - EKS managed node group"
 
-      ebs_optimized = true
+      ebs_optimized           = true
+      disable_api_termination = false
+      enable_monitoring       = true
+
       block_device_mappings = {
         xvda = {
           device_name = "/dev/xvda"
@@ -97,9 +115,9 @@ module "eks" {
       }
 
       create_iam_role          = true
-      iam_role_name            = "eks-managed-node-group"
+      iam_role_name            = "jerry-test-eks-managed-node-group"
       iam_role_use_name_prefix = false
-      iam_role_description     = "EKS managed node group"
+      iam_role_description     = "EKS test managed node group"
       iam_role_tags = {
         Purpose = "Protector of the kubelet"
       }
@@ -107,10 +125,9 @@ module "eks" {
         AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
         additional                         = aws_iam_policy.node_additional.arn
       }
-
     }
-    tags = local.tags
   }
+  tags = local.tags
 }
 
 ################################################################################
@@ -130,7 +147,15 @@ module "vpc" {
   intra_subnets   = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 52)]
 
   enable_nat_gateway     = true
+  enable_ipv6            = true
   create_egress_only_igw = true
+
+  public_subnet_ipv6_prefixes                    = [0, 1, 2]
+  public_subnet_assign_ipv6_address_on_creation  = true
+  private_subnet_ipv6_prefixes                   = [3, 4, 5]
+  private_subnet_assign_ipv6_address_on_creation = true
+  intra_subnet_ipv6_prefixes                     = [6, 7, 8]
+  intra_subnet_assign_ipv6_address_on_creation   = true
 
   public_subnet_tags = {
     "kubernetes.io/role/elb" = 1
@@ -213,4 +238,14 @@ resource "aws_iam_policy" "node_additional" {
   })
 
   tags = local.tags
+}
+
+data "aws_ami" "eks_default" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amazon-eks-node-${local.cluster_version}-v*"]
+  }
 }

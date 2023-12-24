@@ -70,7 +70,7 @@ module "eks" {
       # so we need to disable it to use the default template provided by the AWS EKS managed node group service
       use_custom_launch_template = false
 
-      name            = "karpenter-01"
+      name            = "karpenter"
       use_name_prefix = false
       description     = "Karpenter - EKS managed node group"
 
@@ -88,24 +88,26 @@ module "eks" {
 
       description = "Karpenter - EKS managed node group"
 
+      disk_size = 80
+
       ebs_optimized           = true
       disable_api_termination = false
       enable_monitoring       = true
 
-      block_device_mappings = {
-        xvda = {
-          device_name = "/dev/xvda"
-          ebs = {
-            volume_size           = 75
-            volume_type           = "gp3"
-            iops                  = 3000
-            throughput            = 150
-            encrypted             = true
-            kms_key_id            = module.ebs_kms_key.key_arn
-            delete_on_termination = true
-          }
-        }
-      }
+      # block_device_mappings = {
+      #   xvda = {
+      #     device_name = "/dev/xvda"
+      #     ebs = {
+      #       volume_size           = 75
+      #       volume_type           = "gp3"
+      #       iops                  = 3000
+      #       throughput            = 150
+      #       encrypted             = true
+      #       kms_key_id            = module.ebs_kms_key.key_arn
+      #       delete_on_termination = true
+      #     }
+      #   }
+      # }
 
       metadata_options = {
         http_endpoint               = "enabled"

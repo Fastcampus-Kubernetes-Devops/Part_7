@@ -127,6 +127,7 @@ module "eks" {
         AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
         additional                         = aws_iam_policy.node_additional.arn
       }
+      tags = { Name = "karpenter" }
     }
   }
   tags = local.tags

@@ -6,10 +6,12 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Service     = "SNS-Test"
-      Team        = "tech/devops"
-      Env         = "test"
-      Terraformed = "true"
+      Service      = "SNS-Test"
+      Organization = "tech"
+      Team         = "tech/devops"
+      Resource     = "eks"
+      Env          = "test"
+      Terraformed  = "true"
     }
   }
 }

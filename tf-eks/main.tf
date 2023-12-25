@@ -8,22 +8,11 @@ data "aws_availability_zones" "available" {}
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "19.21.0"
+  version = "~> 19.0"
 
   cluster_name                   = local.name
   cluster_version                = local.cluster_version
   cluster_endpoint_public_access = true
-
-  # IPV6
-  cluster_ip_family = "ipv6"
-
-  # We are using the IRSA created below for permissions
-  # However, we have to deploy with the policy attached FIRST (when creating a fresh cluster)
-  # and then turn this off after the cluster/node group is created. Without this initial policy,
-  # the VPC CNI fails to assign IPs and nodes cannot join the cluster
-  # See https://github.com/aws/containers-roadmap/issues/1666 for more context
-  # TODO - remove this policy once AWS releases a managed version similar to AmazonEKS_CNI_Policy (IPv4)
-  create_cni_ipv6_iam_policy = true
 
   cluster_addons = {
     coredns = {
@@ -50,8 +39,6 @@ module "eks" {
   subnet_ids               = module.vpc.private_subnets
   control_plane_subnet_ids = module.vpc.intra_subnets
 
-  manage_aws_auth_configmap = true
-
   eks_managed_node_group_defaults = {
     ami_type = "AL2_x86_64"
 
@@ -64,7 +51,6 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    # Default node group - as provided by AWS EKS
     karpenter = {
       # By default, the module creates a launch template to ensure tags are propagated to instances, etc.,
       # so we need to disable it to use the default template provided by the AWS EKS managed node group service
@@ -86,8 +72,6 @@ module "eks" {
 
       subnet_ids = module.vpc.private_subnets
 
-      description = "Karpenter - EKS managed node group"
-
       disk_size = 80
 
       ebs_optimized           = true
@@ -108,13 +92,6 @@ module "eks" {
       #     }
       #   }
       # }
-
-      metadata_options = {
-        http_endpoint               = "enabled"
-        http_tokens                 = "required"
-        http_put_response_hop_limit = 2
-        instance_metadata_tags      = "disabled"
-      }
 
       create_iam_role          = true
       iam_role_name            = "jerry-test-eks-managed-node-group"
@@ -177,7 +154,7 @@ module "vpc_cni_irsa" {
 
   role_name_prefix      = "VPC-CNI-IRSA"
   attach_vpc_cni_policy = true
-  vpc_cni_enable_ipv6   = true
+  vpc_cni_enable_ipv4   = true
 
   oidc_providers = {
     main = {

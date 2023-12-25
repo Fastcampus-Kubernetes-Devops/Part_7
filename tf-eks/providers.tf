@@ -4,6 +4,7 @@ provider "aws" {
   # shared_credentials_files = ["~/.aws/credentials"] # Or $HOME/.aws/credentials
   profile = "jerry-test"
 
+  # 자동으로 공통 태그를 추가해주는 기능
   default_tags {
     tags = {
       Service      = "SNS-Test"

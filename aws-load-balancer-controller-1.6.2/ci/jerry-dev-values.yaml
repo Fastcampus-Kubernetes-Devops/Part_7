@@ -1,0 +1,6 @@
+serviceAccount:
+  create: true
+  name: aws-load-balancer-controller
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::516696002612:role/load-balancer-controller-jerry-dev  #516696002612
+clusterName: jerry-dev  #jerry-dev

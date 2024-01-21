@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeselector-date-deploy
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: date
+  template:
+    metadata:
+      labels:
+        app: date
+    spec:
+      containers:
+      - name: date-pod
+        image: busybox
+        command:
+        - "/bin/sh"
+        - "-c"
+        - "while true; do date >> /data/pod-out.txt; sleep 10; done"
+        volumeMounts:
+        - name: date-vol 
+          mountPath: /data 
+      volumes: 
+      - name: date-vol
+        persistentVolumeClaim:
+          claimName: date-pvc
+      # nodeSelector:
+      #   kubernetes.io/hostname: ip-10-120-29-37.ap-northeast-2.compute.internal  # hostname of the node

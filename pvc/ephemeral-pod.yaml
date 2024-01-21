@@ -1,0 +1,14 @@
+# pod manifest file 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ephemeral-pod
+  namespace: default
+spec: 
+  containers:
+  - name: date
+    image: busybox
+    command:
+    - "/bin/sh"
+    - "-c"
+    - "while true; do date >> /pod-out.txt; sleep 5; done"

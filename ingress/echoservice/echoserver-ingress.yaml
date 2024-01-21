@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: echoserver
+  namespace: default
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: sg-external
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:{account_id}:certificate/{certificate_id}
+    external-dns.alpha.kubernetes.io/hostname: echoserver-dev.jerryljh.me
+spec:
+  ingressClassName: alb
+  rules:
+  - host: echoserver-dev.jerryljh.me
+    http:
+      paths:
+      - path: /echo-server
+        pathType: Prefix
+        backend:
+          service:
+            name: echoserver
+            port:
+              number: 80

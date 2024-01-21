@@ -1,0 +1,4 @@
+serviceAccount:
+  create: true
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::{account_id}:role/external-dns-{cluster_name}  

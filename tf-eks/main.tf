@@ -17,18 +17,12 @@ module "eks" {
   cluster_addons = {
     coredns = {
       most_recent = true
-      resolve_conflicts_on_create = true
-      resolve_conflicts_on_update = true
     }
     kube-proxy = {
       most_recent = true
-      resolve_conflicts_on_create = true
-      resolve_conflicts_on_update = true
     }
     vpc-cni = {
       most_recent              = true
-      resolve_conflicts_on_create = true
-      resolve_conflicts_on_update = true
 
       before_compute           = true
       service_account_role_arn = module.vpc_cni_irsa.iam_role_arn

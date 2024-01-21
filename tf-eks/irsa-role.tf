@@ -1,7 +1,7 @@
 module "load_balancer_controller_irsa_role" {
   source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
 
-  role_name                              = "load-balancer-controller-jerry-dev"
+  role_name                              = "load-balancer-controller-${var.cluster_name}"
   attach_load_balancer_controller_policy = true
 
   oidc_providers = {
@@ -17,7 +17,7 @@ module "load_balancer_controller_irsa_role" {
 module "external_dns_irsa_role" {
   source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
 
-  role_name                     = "external-dns-jerry-dev"
+  role_name                     = "external-dns-${var.cluster_name}"
   attach_external_dns_policy    = true
   external_dns_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${var.secret_hosted_zone_id}"]
 
@@ -25,6 +25,22 @@ module "external_dns_irsa_role" {
     ex = {
       provider_arn               = module.eks.oidc_provider_arn
       namespace_service_accounts = ["kube-system:external-dns"]
+    }
+  }
+
+  tags = local.tags
+}
+
+module "ebs_csi_irsa_role" {
+  source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+
+  role_name             = "ebs-csi-${var.cluster_name}"
+  attach_ebs_csi_policy = true
+
+  oidc_providers = {
+    ex = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
     }
   }
 

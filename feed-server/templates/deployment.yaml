@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "feed.fullname" . }}
+  name: {{ include "feed-server.fullname" . }}
   labels:
-    {{- include "feed.labels" . | nindent 4 }}
+    {{- include "feed-server.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "feed.selectorLabels" . | nindent 6 }}
+      {{- include "feed-server.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "feed.selectorLabels" . | nindent 8 }}
+        {{- include "feed-server.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "feed.serviceAccountName" . }}
+      serviceAccountName: {{ include "feed-server.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -33,6 +33,10 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 10"]
           ports:
             - name: http
               containerPort: {{ .Values.container.port }}
@@ -54,11 +58,19 @@ spec:
           envFrom:
           {{- if .Values.envs }}
             - configMapRef:
-                name: {{ include "feed.fullname" . }}-env
+                name: {{ include "feed-server.fullname" . }}-env
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: mysql-config
           {{- end }}
           {{- if .Values.secrets }}
             - secretRef:
-                name: {{ include "feed.fullname" . }}-secret
+                name: {{ include "feed-server.fullname" . }}-secret
+            - secretRef:
+                name: mysql-secret
+            - secretRef:
+                name: kafka-secret
           {{- end }}
       {{- if .Values.pvc.enabled }}
           volumeMounts:
@@ -67,7 +79,7 @@ spec:
       volumes:
       - name: my-volume
         persistentVolumeClaim:
-          claimName: {{ include "feed.fullname" . }}
+          claimName: {{ include "feed-server.fullname" . }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

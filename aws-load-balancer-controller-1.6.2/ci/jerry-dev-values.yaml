@@ -2,5 +2,5 @@ serviceAccount:
   create: true
   name: aws-load-balancer-controller
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::{account_id}:role/load-balancer-controller-{cluster_name}
-clusterName: {cluster_name}  #jerry-dev
+    eks.amazonaws.com/role-arn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/load-balancer-controller-${CLUSTER_NAME}
+clusterName: ${CLUSTER_NAME}  #jerry-dev

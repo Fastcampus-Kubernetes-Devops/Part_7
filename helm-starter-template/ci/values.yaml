@@ -22,7 +22,7 @@ autoscaling:
 
 # Networking
 container:
-  port: 10080
+  port: 8080
 
 # Volume
 pvc:
@@ -40,11 +40,11 @@ metrics:
 
 probes:
   liveness:
-    enabled: false
-    path: / # liveness 경로를 바꿀 수 있습니다 e.g. /healthz
+    enabled: true
+    path: /healthcheck/live # liveness 경로를 바꿀 수 있습니다 e.g. /healthz
   readiness:
-    enabled: false
-    path: / # readiness 경로를 바꿀 수 있습니다 e.g. /healthz
+    enabled: true
+    path: /healthcheck/ready # readiness 경로를 바꿀 수 있습니다 e.g. /healthz
 
 imagePullSecrets: []
 nameOverride: ""

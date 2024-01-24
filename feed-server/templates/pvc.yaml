@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "feed.fullname" . }}
+  name: {{ include "feed-server.fullname" . }}
 spec:
   accessModes:
     {{- toYaml .Values.pvc.accessModes | nindent 4 }}

@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "feed.fullname" . }}-env
+  name: {{ include "feed-server.fullname" . }}-env
 data:
 {{- range $key, $val := .Values.envs }}
 {{ $key | indent 2 }}: {{ $val | quote }}

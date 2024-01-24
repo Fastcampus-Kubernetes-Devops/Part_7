@@ -1,11 +1,11 @@
-# cat ci/jerry-dev-values.yaml | envsubst | helm install karpenter oci://public.ecr.aws/karpenter/karpenter --version v0.33.1 -f - 
+# cat ci/jerry-dev-values.yaml | envsubst | helm install karpenter . -f - 
 
 serviceAccount:
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/KarpenterControllerRole-${CLUSTER_NAME}
+    eks.amazonaws.com/role-arn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/KarpenterControllerRole-${CLUSTER_NAME}  
 
 settings:
-  clusterName: ${CLUSTER_NAME}
+  clusterName: ${CLUSTER_NAME} #jerry-dev
 
 controller:
   resources:
@@ -26,7 +26,7 @@ affinity:
         - key: eks.amazonaws.com/nodegroup
           operator: In
           values:
-          - ${NODEGROUP}
+          - ${NODEGROUP} #karpenter
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
     - topologyKey: "kubernetes.io/hostname"

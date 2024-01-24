@@ -1,3 +1,5 @@
+# helm install mysql-cluster --set credentials.root.password='sakila' -f ci/jerry-dev-values.yaml --namespace mysql-cluster --create-namespace .
+
 image:
   pullPolicy: IfNotPresent
   pullSecrets:
@@ -12,7 +14,7 @@ credentials:
     host: "%"
 
 tls:
-  useSelfSigned: false
+  useSelfSigned: true
 #  caSecretName:
 #  serverCertAndPKsecretName:
 #  routerCertAndPKsecretName: # our use router.certAndPKsecretName

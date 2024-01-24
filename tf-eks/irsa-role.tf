@@ -1,3 +1,5 @@
+# 최초 설치 시 포함하지 않는 것을 권고합니다.
+
 module "load_balancer_controller_irsa_role" {
   source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
 

@@ -22,7 +22,7 @@ module "eks" {
       most_recent = true
     }
     vpc-cni = {
-      most_recent              = true
+      most_recent = true
 
       before_compute           = true
       service_account_role_arn = module.vpc_cni_irsa.iam_role_arn
@@ -136,6 +136,7 @@ module "vpc" {
 
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = 1
+    "karpenter.sh/discovery"          = local.name
   }
 
   tags = local.tags

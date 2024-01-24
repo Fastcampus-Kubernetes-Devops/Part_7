@@ -1,3 +1,5 @@
+# 최초 설치 시 포함하지 않는 것을 권고합니다.
+
 resource "aws_eks_addon" "aws_ebs_csi_driver" {
   cluster_name             = module.eks.cluster_name
   addon_name               = "aws-ebs-csi-driver"

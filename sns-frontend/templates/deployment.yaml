@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "feed-server.fullname" . }}
+  name: {{ include "sns-frontend.fullname" . }}
   labels:
-    {{- include "feed-server.labels" . | nindent 4 }}
+    {{- include "sns-frontend.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "feed-server.selectorLabels" . | nindent 6 }}
+      {{- include "sns-frontend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "feed-server.selectorLabels" . | nindent 8 }}
+        {{- include "sns-frontend.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "feed-server.serviceAccountName" . }}
+      serviceAccountName: {{ include "sns-frontend.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -58,13 +58,11 @@ spec:
           envFrom:
           {{- if .Values.envs }}
             - configMapRef:
-                name: {{ include "feed-server.fullname" . }}-env
+                name: {{ include "sns-frontend.fullname" . }}-env
           {{- end }}
           {{- if .Values.secrets }}
             - secretRef:
-                name: mysql-secret
-            - secretRef:
-                name: kafka-secret
+                name: {{ include "sns-frontend.fullname" . }}-secret
           {{- end }}
       {{- if .Values.pvc.enabled }}
           volumeMounts:
@@ -73,7 +71,7 @@ spec:
       volumes:
       - name: my-volume
         persistentVolumeClaim:
-          claimName: {{ include "feed-server.fullname" . }}
+          claimName: {{ include "sns-frontend.fullname" . }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

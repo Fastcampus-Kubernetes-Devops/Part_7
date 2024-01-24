@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "feed-server.fullname" . }}
+  name: {{ include "image-server.fullname" . }}
   labels:
-    {{- include "feed-server.labels" . | nindent 4 }}
+    {{- include "image-server.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "feed-server.selectorLabels" . | nindent 6 }}
+      {{- include "image-server.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "feed-server.selectorLabels" . | nindent 8 }}
+        {{- include "image-server.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "feed-server.serviceAccountName" . }}
+      serviceAccountName: {{ include "image-server.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -58,22 +58,20 @@ spec:
           envFrom:
           {{- if .Values.envs }}
             - configMapRef:
-                name: {{ include "feed-server.fullname" . }}-env
+                name: {{ include "image-server.fullname" . }}-env
           {{- end }}
           {{- if .Values.secrets }}
             - secretRef:
-                name: mysql-secret
-            - secretRef:
-                name: kafka-secret
+                name: {{ include "image-server.fullname" . }}-secret
           {{- end }}
       {{- if .Values.pvc.enabled }}
           volumeMounts:
           - name: my-volume
-            mountPath: /data
+            mountPath: .Values.pvc.mountPath
       volumes:
       - name: my-volume
         persistentVolumeClaim:
-          claimName: {{ include "feed-server.fullname" . }}
+          claimName: {{ include "image-server.fullname" . }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

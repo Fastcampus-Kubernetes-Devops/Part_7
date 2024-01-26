@@ -32,3 +32,6 @@ planfile
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Ignore Secret YAML
+*secret*.yaml

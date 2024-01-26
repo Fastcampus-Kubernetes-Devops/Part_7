@@ -5,7 +5,7 @@ serviceAccount:
     eks.amazonaws.com/role-arn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/KarpenterControllerRole-${CLUSTER_NAME}  
 
 settings:
-  clusterName: ${CLUSTER_NAME} #jerry-dev
+  clusterName: ${CLUSTER_NAME}
 
 controller:
   resources:

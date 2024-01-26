@@ -37,13 +37,6 @@ aws iam attach-role-policy --role-name "KarpenterNodeRole-${CLUSTER_NAME}" \
 aws iam attach-role-policy --role-name "KarpenterNodeRole-${CLUSTER_NAME}" \
     --policy-arn arn:${AWS_PARTITION}:iam::aws:policy/AmazonSSMManagedInstanceCore
 
-aws iam create-instance-profile \
-    --instance-profile-name "KarpenterNodeInstanceProfile-${CLUSTER_NAME}"
-
-aws iam add-role-to-instance-profile \
-    --instance-profile-name "KarpenterNodeInstanceProfile-${CLUSTER_NAME}" \
-    --role-name "KarpenterNodeRole-${CLUSTER_NAME}"
-
 cat << EOF > controller-trust-policy.json
 {
     "Version": "2012-10-17",

@@ -4,14 +4,13 @@ data:
     - groups:
       - system:bootstrappers
       - system:nodes
-      rolearn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/jerry-test-eks-managed-node-group
+      rolearn: arn:aws:iam::516696002612:role/jerry-test-eks-managed-node-group
       username: system:node:{{EC2PrivateDNSName}}
     - groups:
       - system:bootstrappers
       - system:nodes
-      rolearn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/KarpenterNodeRole-jerry-dev
+      rolearn: arn:aws:iam::516696002612:role/KarpenterNodeRole-jerry-dev
       username: system:node:{{EC2PrivateDNSName}}
-
 kind: ConfigMap
 metadata:
   name: aws-auth

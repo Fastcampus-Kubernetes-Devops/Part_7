@@ -35,6 +35,6 @@ spec:
           values: ["spot"]
   disruption:
     consolidationPolicy: WhenUnderutilized
-    expireAfter: Never
+    expireAfter: 720h # 30d
   limits:
     cpu: 1000

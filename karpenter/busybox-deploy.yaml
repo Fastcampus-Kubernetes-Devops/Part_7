@@ -1,33 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: httpd
+  name: busybox
   namespace: default
   labels:
-    app: httpd
+    app: busybox
 spec:
   replicas: 4
   selector:
     matchLabels:
-      app: httpd
+      app: busybox
   template:
     metadata:
       labels:
-        app: httpd
+        app: busybox
     spec:
       containers:
-      - name: httpd
-        image: httpd
+      - name: busybox
+        image: busybox
+        command:
+        - "/bin/sh"
+        - "-c"
+        - "sleep inf"
         resources:
           # limits:
           #   memory: 512Mi
           requests:
             cpu: 100m
             memory: 128Mi
-      # tolerations:
-      # - key: "node"
-      #   value: "service"
-      #   effect: "NoSchedule"
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -36,13 +36,5 @@ spec:
               - key: app
                 operator: In
                 values:
-                - httpd
+                - busybox
             topologyKey: kubernetes.io/hostname
-        # nodeAffinity:
-        #   requiredDuringSchedulingIgnoredDuringExecution:
-        #     nodeSelectorTerms:
-        #     - matchExpressions:
-        #       - key: node
-        #         operator: In
-        #         values:
-        #         - service

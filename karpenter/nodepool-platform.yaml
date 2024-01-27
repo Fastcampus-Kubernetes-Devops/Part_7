@@ -4,6 +4,9 @@ metadata:
   name: platform
 spec:
   template:
+    metadata:
+      labels:
+        node: platform
     spec:
       # References the Cloud Provider's NodeClass resource, see your cloud provider specific documentation
       nodeClassRef:

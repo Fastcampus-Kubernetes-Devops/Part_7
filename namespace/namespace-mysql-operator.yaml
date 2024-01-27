@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mysql-operator
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: resource-limit-range
+  namespace: mysql-operator
+spec:
+  limits:
+  - default:
+      memory: 2Gi
+    defaultRequest:
+      cpu: 10m
+      memory: 128Mi
+    type: Container

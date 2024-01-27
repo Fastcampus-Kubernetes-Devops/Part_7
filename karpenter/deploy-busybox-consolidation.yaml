@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox
+  namespace: default
+  labels:
+    app: busybox
+spec:
+  replicas: 25
+  selector:
+    matchLabels:
+      app: busybox
+  template:
+    metadata:
+      labels:
+        app: busybox
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command:
+        - "/bin/sh"
+        - "-c"
+        - "sleep inf"
+        resources:
+          # limits:
+          #   memory: 512Mi
+          requests:
+            cpu: 400m
+            memory: 512Mi
+      # 카펜터 노드 Consolidation 테스트 시 사용
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #     - labelSelector:
+      #         matchExpressions:
+      #         - key: app
+      #           operator: In
+      #           values:
+      #           - busybox
+      #       topologyKey: kubernetes.io/hostname

@@ -11,4 +11,4 @@ spec:
       preStop:
         exec:
           command: ["/bin/sh", "-c", "sleep 10"]
-
+          # command: ["/bin/sh", "-c", "sleep 40"]

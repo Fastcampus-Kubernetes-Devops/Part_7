@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx-daemonset
+  namespace: default
+  labels:
+    app: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        resources:
+          # limits:
+          #   memory: 512Mi
+          requests:
+            cpu: 200m
+            memory: 512Mi
+      # 처음 실행 시 주석 실행, 이 후 주석 해제
+      priorityClassName: system-node-critical

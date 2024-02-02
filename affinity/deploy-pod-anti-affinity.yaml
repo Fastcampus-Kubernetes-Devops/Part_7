@@ -23,7 +23,7 @@ spec:
           #   memory: 512Mi
           requests:
             cpu: 10m
-            memory: 10Mi
+            memory: 128Mi
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:

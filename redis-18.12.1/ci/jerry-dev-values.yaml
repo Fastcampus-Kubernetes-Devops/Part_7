@@ -1,0 +1,24 @@
+# helm install redis oci://registry-1.docker.io/bitnamicharts/redis --version 18.12.1 -f ci/jerry-dev-values.yaml
+
+image:
+  registry: docker.io
+  repository: bitnami/redis
+  tag: 7.2.4-debian-11-r5
+  digest: ""
+architecture: replication
+auth:
+  enabled: false
+master:
+  count: 1
+replica:
+  replicaCount: 1  # set to 1 
+sentinel:
+  enabled: false
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: false  # after prometheus-operator is installed, set to true
+  prometheusRule:
+    enabled: false  # after prometheus-operator is installed, set to true
+sysctl:
+  enabled: true

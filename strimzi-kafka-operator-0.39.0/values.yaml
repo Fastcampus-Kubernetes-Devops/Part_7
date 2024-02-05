@@ -1,5 +1,4 @@
-# helm upgrade --install strimzi-kafka-operator oci://quay.io/strimzi-helm/strimzi-kafka-operator --version 0.39.0 -f ci/baas-dev-01-values.yaml --namespace kafka --install --create-namespace --wait
-
+# helm upgrade --install strimzi-kafka-operator oci://quay.io/strimzi-helm/strimzi-kafka-operator --version 0.39.0 -f values.yaml --namespace kafka --create-namespace --wait
 
 # Default values for strimzi-kafka-operator.
 

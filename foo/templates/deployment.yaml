@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ include "foo.fullname" . }}
   labels:
-    {{- include "<CHARTNAME>.labels" . | nindent 4 }}
+    {{- include "foo.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "<CHARTNAME>.selectorLabels" . | nindent 6 }}
+      {{- include "foo.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "<CHARTNAME>.selectorLabels" . | nindent 8 }}
+        {{- include "foo.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "<CHARTNAME>.serviceAccountName" . }}
+      serviceAccountName: {{ include "foo.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -33,44 +33,20 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 10"]
           ports:
             - name: http
-              containerPort: {{ .Values.container.port }}
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
-          {{- if .Values.probes.liveness.enabled }}
           livenessProbe:
             httpGet:
-              path: {{ .Values.probes.liveness.path }}
+              path: /
               port: http
-          {{- end }}
-          {{- if .Values.probes.readiness.enabled }}
           readinessProbe:
             httpGet:
-              path: {{ .Values.probes.readiness.path }}
+              path: /
               port: http
-          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if .Values.configMap.enabled }}
-          envFrom:
-            - configMapRef:
-                name: {{ .Release.Name }}-configmap
-          {{- end }}
-          {{- if .Values.pvc.enabled }}
-          volumeMounts:
-            - name: storage-volume
-              mountPath: "/data"
-          {{- end }}
-      {{- if .Values.pvc.enabled }}
-      volumes:
-        - name: storage-volume
-          persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-pvc
-      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

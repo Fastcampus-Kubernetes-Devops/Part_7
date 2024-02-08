@@ -1,4 +1,10 @@
 # 최초 설치 시 포함하지 않는 것을 권고합니다.
+# 아래 TF 변수(ex var.cluster_name, var.secret_hosted_zone_id)를 각자 설정으로 대체합니다.
+
+# 혹은 아래와 같이 TF 변수를 설정합니다. 
+# export TF_VAR_secret_hosted_zone_id="xxxx"
+# export TF_VAR_secret_aws_account_id="xxxx"
+# export TF_VAR_cluster_name="xxxx"
 
 module "load_balancer_controller_irsa_role" {
   source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"

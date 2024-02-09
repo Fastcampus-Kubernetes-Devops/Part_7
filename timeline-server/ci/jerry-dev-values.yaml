@@ -1,8 +1,8 @@
 # Replica count
-replicaCount: 1
+replicaCount: 2
 
 image:
-  repository: 516696002612.dkr.ecr.ap-northeast-2.amazonaws.com/feed-server
+  repository: 516696002612.dkr.ecr.ap-northeast-2.amazonaws.com/timeline-server
   pullPolicy: Always
   tag: "1.0.0" # 이미지 태그를 지정합니다.
 
@@ -11,7 +11,6 @@ configMap:
   data:
     # my-key: "my-value"
     SPRING_PROFILES_ACTIVE: dev
-    USER_SERVICE: user-service
 
 pdb:
   enabled: false
@@ -87,7 +86,7 @@ ingress:
   hosts:
   - host: sns.jerryljh.me
     paths:
-    - path: /api/feeds
+    - path: /api/timeline
       pathType: ImplementationSpecific
   tls: []
 

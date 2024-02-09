@@ -74,14 +74,21 @@ service:
   port: 80
 
 ingress:
-  enabled: false
-  className: ""
-  annotations: {}
+  enabled: true
+  className: "alb"
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: sg-external
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:${AWS_ACCOUNT_ID}:certificate/${CERTIFICATE_ID}
+    external-dns.alpha.kubernetes.io/hostname: sns.jerryljh.me
   hosts:
-  - host: chart-example.local
+  - host: sns.jerryljh.me
     paths:
-    - path: /
-      pathType: ImplementationSpecific
+    - path: /api/images
+      pathType: Prefix
   tls: []
 
 # Conatiner resources

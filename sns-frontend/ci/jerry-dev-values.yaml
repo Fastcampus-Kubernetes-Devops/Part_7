@@ -87,7 +87,7 @@ ingress:
   - host: sns.jerryljh.me
     paths:
     - path: /
-      pathType: ImplementationSpecific
+      pathType: Prefix
   tls: []
 
 # Conatiner resources

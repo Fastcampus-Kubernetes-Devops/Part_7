@@ -65,8 +65,6 @@ spec:
                 name: mysql-config
             - secretRef:
                 name: mysql-secret
-            - secretRef:
-                name: kafka-secret
           {{- end }}
           {{- if .Values.pvc.enabled }}
           volumeMounts:

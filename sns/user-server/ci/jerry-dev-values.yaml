@@ -81,6 +81,8 @@ ingress:
     alb.ingress.kubernetes.io/group.name: sg-external
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/success-codes: '200,302'
+    alb.ingress.kubernetes.io/healthcheck-path: /healthcheck/ready
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:${AWS_ACCOUNT_ID}:certificate/${CERTIFICATE_ID}
     external-dns.alpha.kubernetes.io/hostname: sns.jerryljh.me
   hosts:

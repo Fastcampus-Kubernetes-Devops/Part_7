@@ -1,37 +1,31 @@
+# Replica count
+replicaCount: 1
+
 image:
-  repository: pengbai/docker-supermario
+  repository: 516696002612.dkr.ecr.ap-northeast-2.amazonaws.com/sns-frontend
   pullPolicy: Always
   tag: "1.0.0" # 이미지 태그를 지정합니다.
 
-envs: 
-  SPRING_PROFILES_ACTIVE: dev
-  # 위에 {}를 지우고 <환경변수>: <값>을 쓰세요
-  # e.g.
-  # SERVER_PORT: 8080
-  # SERVER_HOST: default
-  # ...
-
-# Replica count
-replicaCount: 2
-
-# HPA
-autoscaling:
+configMap:
   enabled: false
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 80
+  data:
+    # my-key: "my-value"
+    SPRING_PROFILES_ACTIVE: dev
+
+pdb:
+  enabled: false
+  minAvailable: 1
 
 # Networking
 container:
-  port: 8080
+  port: 3000
 
 # Volume
 pvc:
   enabled: false
-  accessModes:
-    - ReadWriteOnce
+  accessModes: "ReadWriteOnce"
   storageClassName: "ebs-sc"
-  size: 10Gi
+  storage: "1Gi"
 
 terminationGracePeriodSeconds: 30
 
@@ -41,10 +35,10 @@ metrics:
 
 probes:
   liveness:
-    enabled: true
+    enabled: false
     path: /healthcheck/live # liveness 경로를 바꿀 수 있습니다 e.g. /healthz
   readiness:
-    enabled: true
+    enabled: false
     path: /healthcheck/ready # readiness 경로를 바꿀 수 있습니다 e.g. /healthz
 
 imagePullSecrets: []
@@ -79,11 +73,18 @@ service:
   port: 80
 
 ingress:
-  enabled: false
-  className: ""
-  annotations: {}
+  enabled: true
+  className: "alb"
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: sg-external
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:${AWS_ACCOUNT_ID}:certificate/${CERTIFICATE_ID}
+    external-dns.alpha.kubernetes.io/hostname: sns.jerryljh.me
   hosts:
-  - host: chart-example.local
+  - host: sns.jerryljh.me
     paths:
     - path: /
       pathType: ImplementationSpecific
@@ -92,12 +93,20 @@ ingress:
 # Conatiner resources
 resources:
   limits:
-    # memory: 128Mi
+    memory: 2Gi
   requests:
     cpu: 10m
     memory: 128Mi
 
 # Scheduling
+
+# HPA
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
 nodeSelector: {}
 tolerations: []
 affinity: {}

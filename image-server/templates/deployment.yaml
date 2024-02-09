@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "image-server.fullname" . }}
+  name: {{ .Release.Name }}
   labels:
     {{- include "image-server.labels" . | nindent 4 }}
 spec:
@@ -55,23 +55,21 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.configMap.enabled }}
           envFrom:
-          {{- if .Values.envs }}
             - configMapRef:
-                name: {{ include "image-server.fullname" . }}-env
+                name: {{ .Release.Name }}-configmap
           {{- end }}
-          {{- if .Values.secrets }}
-            - secretRef:
-                name: {{ include "image-server.fullname" . }}-secret
+          {{- if .Values.pvc.enabled }}
+          volumeMounts:
+            - name: storage-volume
+              mountPath: "/images"
           {{- end }}
       {{- if .Values.pvc.enabled }}
-          volumeMounts:
-          - name: my-volume
-            mountPath: .Values.pvc.mountPath
       volumes:
-      - name: my-volume
-        persistentVolumeClaim:
-          claimName: {{ include "image-server.fullname" . }}
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pvc
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

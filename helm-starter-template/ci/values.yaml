@@ -1,3 +1,6 @@
+# Replica count
+replicaCount: 1
+
 image:
   repository: pengbai/docker-supermario
   pullPolicy: Always
@@ -12,16 +15,6 @@ configMap:
 pdb:
   enabled: false
   minAvailable: 1
-
-# Replica count
-replicaCount: 2
-
-# HPA
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 80
 
 # Networking
 container:
@@ -93,12 +86,20 @@ ingress:
 # Conatiner resources
 resources:
   limits:
-    # memory: 128Mi
+    memory: 2Gi
   requests:
     cpu: 10m
     memory: 128Mi
 
 # Scheduling
+
+# HPA
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
 nodeSelector: {}
 tolerations: []
 affinity: {}

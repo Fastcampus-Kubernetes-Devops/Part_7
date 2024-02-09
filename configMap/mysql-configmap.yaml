@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  namespace: sns
+data:
+  MYSQL_HOST: "mysql-cluster.mysql-cluster.svc.cluster.local"
+  MYSQL_PORT: "3306"

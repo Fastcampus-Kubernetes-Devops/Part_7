@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "feed-server.fullname" . }}
+  name: {{ .Release.Name }}
   labels:
     {{- include "feed-server.labels" . | nindent 4 }}
 spec:
@@ -55,25 +55,29 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.configMap.enabled }}
           envFrom:
-          {{- if .Values.envs }}
             - configMapRef:
-                name: {{ include "feed-server.fullname" . }}-env
-          {{- end }}
-          {{- if .Values.secrets }}
+                name: {{ .Release.Name }}-configmap
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: mysql-config
             - secretRef:
                 name: mysql-secret
             - secretRef:
                 name: kafka-secret
           {{- end }}
-      {{- if .Values.pvc.enabled }}
+          {{- if .Values.pvc.enabled }}
           volumeMounts:
-          - name: my-volume
-            mountPath: /data
+            - name: storage-volume
+              mountPath: "/data"
+          {{- end }}
+      {{- if .Values.pvc.enabled }}
       volumes:
-      - name: my-volume
-        persistentVolumeClaim:
-          claimName: {{ include "feed-server.fullname" . }}
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pvc
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

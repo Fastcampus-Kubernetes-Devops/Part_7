@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "sns-frontend.fullname" . }}
+  name: {{ .Release.Name }}
   labels:
     {{- include "sns-frontend.labels" . | nindent 4 }}
 spec:
@@ -55,23 +55,21 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.configMap.enabled }}
           envFrom:
-          {{- if .Values.envs }}
             - configMapRef:
-                name: {{ include "sns-frontend.fullname" . }}-env
+                name: {{ .Release.Name }}-configmap
           {{- end }}
-          {{- if .Values.secrets }}
-            - secretRef:
-                name: {{ include "sns-frontend.fullname" . }}-secret
+          {{- if .Values.pvc.enabled }}
+          volumeMounts:
+            - name: storage-volume
+              mountPath: "/data"
           {{- end }}
       {{- if .Values.pvc.enabled }}
-          volumeMounts:
-          - name: my-volume
-            mountPath: /data
       volumes:
-      - name: my-volume
-        persistentVolumeClaim:
-          claimName: {{ include "sns-frontend.fullname" . }}
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pvc
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

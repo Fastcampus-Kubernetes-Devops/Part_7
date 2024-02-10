@@ -9,5 +9,5 @@ spec:
   storageClassName: {{ .Values.pvc.storageClassName }}
   resources:
     requests:
-      storage: {{ .Values.pvc.storage }}
+      storage: {{ .Values.pvc.capacity }}
 {{- end }}

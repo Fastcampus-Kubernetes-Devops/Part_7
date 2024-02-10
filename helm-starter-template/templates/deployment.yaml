@@ -60,16 +60,13 @@ spec:
             - configMapRef:
                 name: {{ .Release.Name }}-configmap
           {{- end }}
-          {{- if .Values.pvc.enabled }}
+          {{- with .Values.volumeMounts }}
           volumeMounts:
-            - name: storage-volume
-              mountPath: "/data"
+            {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- if .Values.pvc.enabled }}
+      {{- with .Values.volumes }}
       volumes:
-        - name: storage-volume
-          persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-pvc
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

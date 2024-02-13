@@ -28,7 +28,7 @@ pvc:
   storageClassName: "ebs-sc"
   storage: "10Gi"
 
-terminationGracePeriodSeconds: 30
+terminationGracePeriodSeconds: 60
 
 metrics:
   enabled: false # 메트릭을 사용할지 결정합니다

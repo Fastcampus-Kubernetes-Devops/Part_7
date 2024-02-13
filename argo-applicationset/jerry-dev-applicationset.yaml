@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: sns-applicationset
+  namespace: argocd
+spec:
+  # syncPolicy:
+  #   preserveResourcesOnDeletion: true
+  generators:
+  - list:
+      elements:
+      - name: feed-server
+        namespace: sns
+      - name: image-server
+        namespace: sns
+      - name: timeline-server
+        namespace: sns
+      - name: user-server
+        namespace: sns
+      - name: sns-frontend
+        namespace: sns
+  template:
+    metadata:
+      name: '{{ name }}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Fastcampus-Kubernetes-Devops/Part_7.git
+        targetRevision: HEAD
+        path: 'sns/{{ name }}'
+        helm:
+          releaseName: '{{ name }}'
+          valueFiles:
+          - ci/jerry-dev-values.yaml
+      destination:
+        name: in-cluster
+        namespace: '{{ namespace }}'
+      syncPolicy:
+        syncOptions:
+        - CreateNamespace=true
+        automated:
+          prune: true
+          selfHeal: true

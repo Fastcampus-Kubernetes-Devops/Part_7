@@ -24,8 +24,6 @@ pdb:
 container:
   port: 8080
 
-terminationGracePeriodSeconds: 30
-
 metrics:
   enabled: false # 메트릭을 사용할지 결정합니다
   path: /metrics # 메트릭 경로를 지정합니다.

@@ -11,14 +11,14 @@ spec:
       elements:
       - name: feed-server
         namespace: sns
-      - name: image-server
-        namespace: sns
-      - name: timeline-server
-        namespace: sns
-      - name: user-server
-        namespace: sns
-      - name: sns-frontend
-        namespace: sns
+      # - name: image-server
+      #   namespace: sns
+      # - name: timeline-server
+      #   namespace: sns
+      # - name: user-server
+      #   namespace: sns
+      # - name: sns-frontend
+      #   namespace: sns
   template:
     metadata:
       name: '{{ name }}'

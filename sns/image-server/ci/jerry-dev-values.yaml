@@ -26,7 +26,7 @@ pvc:
   enabled: true
   accessModes: "ReadWriteOnce"
   storageClassName: "ebs-sc"
-  storage: "5Gi"
+  storage: "10Gi"
 
 terminationGracePeriodSeconds: 30
 

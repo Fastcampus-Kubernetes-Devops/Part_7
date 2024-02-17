@@ -9,8 +9,8 @@ spec:
   generators:
   - list:
       elements:
-      # - name: feed-server
-      #   namespace: sns
+      - name: feed-server
+        namespace: sns
       - name: image-server
         namespace: sns
       - name: timeline-server
@@ -38,6 +38,6 @@ spec:
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
-        # automated:
-        #   prune: true
-        #   selfHeal: true
+        automated:
+          prune: true
+          selfHeal: true

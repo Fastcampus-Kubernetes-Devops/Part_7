@@ -1,5 +1,5 @@
 # Replica count
-replicaCount: 2
+replicaCount: 3
 
 image:
   repository: 516696002612.dkr.ecr.ap-northeast-2.amazonaws.com/timeline-server #jheo/feed-server

@@ -1,17 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: deployments
+  name: configmap
   namespace: argocd
 spec:
   destination:
     name: in-cluster
-    namespace: sns
+    namespace: default
   project: default
   source:
-    path: deployments
+    path: configMap
     repoURL: https://github.com/Fastcampus-Kubernetes-Devops/Part_7.git
     targetRevision: HEAD
-  syncPolicy:
-    syncOptions:
-    - CreateNamespace=true

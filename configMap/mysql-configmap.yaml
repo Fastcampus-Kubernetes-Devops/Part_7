@@ -5,4 +5,4 @@ metadata:
   namespace: sns
 data:
   MYSQL_HOST: "mysql-cluster.mysql-cluster.svc.cluster.local"
-  MYSQL_PORT: "3306"
+  MYSQL_PORT: "33306"

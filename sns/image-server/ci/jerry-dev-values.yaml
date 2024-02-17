@@ -98,7 +98,7 @@ resources:
   limits:
     memory: 2Gi
   requests:
-    cpu: 10m
+    cpu: 100m
     memory: 128Mi
 
 # Scheduling

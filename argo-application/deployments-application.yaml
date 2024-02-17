@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: image-server
+  name: deployments
   namespace: argocd
 spec:
   destination:
@@ -9,16 +9,9 @@ spec:
     namespace: sns
   project: default
   source:
-    helm:
-      releaseName: image-server
-      valueFiles:
-      - ci/jerry-dev-values.yaml
-    path: sns/image-server
+    path: deployments
     repoURL: https://github.com/Fastcampus-Kubernetes-Devops/Part_7.git
     targetRevision: HEAD
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
-  # autoSync:
-  #   prune: true
-  #   selfHeal: true

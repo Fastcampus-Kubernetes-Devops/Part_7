@@ -10,8 +10,7 @@ metadata:
   namespace: redis
 spec:
   limits:
-  - default:
-      memory: 2Gi
+  - default: {}
     defaultRequest:
       cpu: 10m
       memory: 128Mi

@@ -16,6 +16,10 @@ configMap:
     # my-key: "my-value"
     SPRING_PROFILES_ACTIVE: dev
 
+secret:
+  enabled: false
+  name: mysql-secret
+
 pdb:
   enabled: false
   minAvailable: 1

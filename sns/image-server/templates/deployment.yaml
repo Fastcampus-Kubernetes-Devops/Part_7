@@ -64,8 +64,6 @@ spec:
           volumeMounts:
             - name: storage-volume
               mountPath: "/images"
-          {{- end }}
-      {{- if .Values.pvc.enabled }}
       volumes:
         - name: storage-volume
           persistentVolumeClaim:

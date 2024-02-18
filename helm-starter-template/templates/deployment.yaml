@@ -60,6 +60,10 @@ spec:
             - configMapRef:
                 name: {{ .Release.Name }}-configmap
           {{- end }}
+          {{- if .Values.secret.enabled }}
+            - secretRef:
+                name: {{ .Values.secret.name }}
+          {{- end }}
           {{- with .Values.volumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}

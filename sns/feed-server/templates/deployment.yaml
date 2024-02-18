@@ -59,10 +59,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Release.Name }}-configmap
-            - configMapRef:
-                name: kafka-config
-            - configMapRef:
-                name: mysql-config
           {{- end }}
           {{- if .Values.secret.enabled }}
             - secretRef:

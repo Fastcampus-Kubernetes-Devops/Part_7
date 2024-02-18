@@ -63,8 +63,10 @@ spec:
                 name: kafka-config
             - configMapRef:
                 name: mysql-config
+          {{- end }}
+          {{- if .Values.secret.enabled }}
             - secretRef:
-                name: mysql-secret
+                name: {{ .Values.secret.name }}
           {{- end }}
           {{- if .Values.pvc.enabled }}
           volumeMounts:

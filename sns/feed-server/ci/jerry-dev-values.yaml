@@ -12,6 +12,15 @@ configMap:
     # my-key: "my-value"
     SPRING_PROFILES_ACTIVE: dev
     USER_SERVICE: http://user-server
+    KAFKA_HOST: "kafka-cluster-kafka-brokers.kafka.svc.cluster.local"
+    KAFKA_PORT: "9092"
+    KAFKA_SASL_PROTOCOL: "PLAINTEXT"
+    MYSQL_HOST: "mysql-cluster.mysql-cluster.svc.cluster.local"
+    MYSQL_PORT: "3306"
+
+secret:
+  enabled: true
+  name: mysql-secret
 
 pdb:
   enabled: false

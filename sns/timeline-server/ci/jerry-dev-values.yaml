@@ -11,11 +11,11 @@ configMap:
   data:
     # my-key: "my-value"
     SPRING_PROFILES_ACTIVE: dev
-    REDIS_HOST: "redis-master.redis.svc.cluster.local"
-    REDIS_PORT: "6379"
     KAFKA_HOST: "kafka-cluster-kafka-brokers.kafka.svc.cluster.local"
     KAFKA_PORT: "9092"
     KAFKA_SASL_PROTOCOL: "PLAINTEXT"
+    REDIS_HOST: "redis-master.redis.svc.cluster.local"
+    REDIS_PORT: "6379"
 
 pdb:
   enabled: false

@@ -34,4 +34,4 @@ planfile
 terraform.rc
 
 # Ignore Secret YAML
-*secret*.yaml
+secret.yaml

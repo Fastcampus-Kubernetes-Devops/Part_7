@@ -1,0 +1,141 @@
+defaultRules:
+  create: true
+  rules:
+    etcd: false
+    kubeApiserverAvailability: false
+    kubeApiserverBurnrate: false
+    kubeApiserverHistogram: false
+    kubeApiserverSlos: false
+    kubeControllerManager: false
+    kubeSchedulerAlerting: false
+    kubeSchedulerRecording: false
+    windows: false
+
+## Configuration for alertmanager
+alertmanager:
+  enabled: true
+  # config:
+  #   route:
+  #     group_by: ['namespace']
+  #     group_wait: 30s
+  #     group_interval: 2m
+  #     repeat_interval: 6h
+  #     receiver: 'slack-notifications'
+  #     routes:
+  #     - receiver: 'slack-notifications'
+  #       matchers:
+  #         - alertname =~ "InfoInhibitor|Watchdog"
+  #   receivers:
+  #   - name: 'slack-notifications'
+  #     slack_configs:
+  #     - api_url: "{{ SLACK_API }}" # 여기에 Slack Webhook URL을 넣습니다.
+  #       channel: '#alert-grafana-jerry-test' # 메시지를 보낼 Slack 채널
+  #       send_resolved: true
+  #       title: '{{ template "slack.default.title" . }}'
+  #       text: "summary: {{ .CommonAnnotations.summary }}\ndescription: {{ .CommonAnnotations.description }}"
+
+grafana:
+  enabled: true
+  defaultDashboardsTimezone: Asia/Seoul
+  deploymentStrategy:
+    type: Recreate
+  ingress:
+    enabled: true
+    ingressClassName: alb
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing # internet-facing or internal
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/group.name: sg-external
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+      alb.ingress.kubernetes.io/ssl-redirect: "443"
+      alb.ingress.kubernetes.io/success-codes: 200-302
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:516696002612:certificate/33cf6410-65a4-4c28-b490-c7fba1a5289e
+      external-dns.alpha.kubernetes.io/hostname: grafana.jerryljh.me
+    hosts:
+    - grafana.jerryljh.me
+    paths:
+    - /*
+  persistence:
+    type: pvc
+    enabled: true
+    accessModes:
+    - ReadWriteOnce
+    size: 5Gi
+    finalizers:
+    - kubernetes.io/pvc-protection
+
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: provider-site
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/provider-site
+
+# now using that provider to import dashboards
+  dashboards:
+    provider-site:
+      kubernetes-views-global:
+        # url: https://grafana.com/api/dashboards/1860/revisions/27/download
+        gnetId: 15757
+        revision: 31
+        datasource: Prometheus
+      kubernetes-views-namespaces:
+        gnetId: 15758
+        revision: 27
+        datasource: Prometheus
+      kubernetes-views-nodes:
+        gnetId: 15759
+        revision: 19
+        datasource: Prometheus
+      kubernetes-views-pods:
+        gnetId: 15760
+        revision: 22
+        datasource: Prometheus
+      prometheus:
+        gnetId: 19105
+        revision: 1
+        datasource: Prometheus
+
+kubeApiServer:
+  enabled: false
+kubelet:
+  enabled: true
+kubeControllerManager:
+  enabled: false
+coreDns:
+  enabled: true
+kubeEtcd:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: true
+kubeStateMetrics:
+  enabled: true
+nodeExporter:
+  enabled: true
+prometheusOperator:
+  enabled: true
+
+prometheus-node-exporter:
+  priorityClassName: system-node-critical
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    retention: 5d
+    retentionSize: 10GiB
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ebs-sc
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi

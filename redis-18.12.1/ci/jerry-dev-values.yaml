@@ -10,15 +10,28 @@ auth:
   enabled: false
 master:
   count: 1
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 256Mi
 replica:
   replicaCount: 1  # set to 1 
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 256Mi
+
 sentinel:
   enabled: false
 metrics:
   enabled: true
   serviceMonitor:
-    enabled: false  # after prometheus-operator is installed, set to true
+    enabled: true  # after prometheus-operator is installed, set to true
   prometheusRule:
-    enabled: false  # after prometheus-operator is installed, set to true
+    enabled: true  # after prometheus-operator is installed, set to true
 sysctl:
   enabled: true

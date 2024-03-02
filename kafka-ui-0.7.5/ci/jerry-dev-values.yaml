@@ -1,0 +1,5 @@
+yamlApplicationConfig:
+  kafka:
+    clusters:
+      - name: jerry-dev-kafka
+        bootstrapServers: kafka-cluster-kafka-bootstrap:9092

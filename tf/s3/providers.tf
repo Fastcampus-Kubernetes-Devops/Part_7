@@ -8,7 +8,7 @@ provider "aws" {
       Service      = "SNS-Test"
       Organization = "tech"
       Team         = "tech/devops"
-      Resource     = "ecr"
+      Resource     = "s3"
       Env          = "test"
       Terraformed  = "true"
     }
@@ -27,7 +27,7 @@ terraform {
 
   backend "s3" {
     bucket         = "jerry-test-tfstate"
-    key            = "ecr/jerry-dev.tfstate"
+    key            = "s3/loki-jerry-dev.tfstate"
     region         = "ap-northeast-2"
     profile        = "jerry-test"
     dynamodb_table = "TerraformStateLock"

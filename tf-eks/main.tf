@@ -130,6 +130,9 @@ module "vpc" {
   enable_nat_gateway     = true
   create_egress_only_igw = true
 
+  single_nat_gateway     = true
+  one_nat_gateway_per_az = false
+
   public_subnet_tags = {
     "kubernetes.io/role/elb" = 1
   }

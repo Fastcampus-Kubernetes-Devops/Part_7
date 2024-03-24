@@ -1,0 +1,17 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: php-cron-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: php-apache
+  minReplicaCount: 0
+  cooldownPeriod: 300
+  triggers:
+  - type: cron
+    metadata:
+      timezone: Asia/Seoul
+      start: 35 13 24,25 3 *
+      end: 55 13 24,25 3 *
+      desiredReplicas: "5"

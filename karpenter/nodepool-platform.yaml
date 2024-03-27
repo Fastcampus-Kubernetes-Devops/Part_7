@@ -23,7 +23,9 @@ spec:
           values: ["5"]
         - key: "topology.kubernetes.io/zone"
           operator: In
-          values: ["ap-northeast-2a"]
+          values: ["ap-northeast-2a"]          
+          # Default 노드 그룹에서 실행 중인 파드의 PVC 에러 발생시 변경
+          # values: ["ap-northeast-2a","ap-northeast-2b","ap-northeast-2c"]
         - key: "kubernetes.io/arch"
           operator: In
           values: ["amd64"]

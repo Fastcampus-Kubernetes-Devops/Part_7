@@ -31,7 +31,7 @@ provider "kubernetes" {
 
 locals {
   name            = "jerry-dev"
-  cluster_version = "1.28"  # EKS 업그레이드 시 1.29 변경
+  cluster_version = "1.28"  # EKS 업그레이드 시 1.28 to 1.29 변경
   region          = "ap-northeast-2"
 
   vpc_cidr = "10.120.0.0/16"

@@ -70,9 +70,7 @@ module "eks" {
       desired_size = 2
 
       ami_id = data.aws_ami.eks_default.image_id
-
       subnet_ids = module.vpc.private_subnets
-
       disk_size = 80
 
       ebs_optimized           = true

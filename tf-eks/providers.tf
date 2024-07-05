@@ -1,3 +1,16 @@
+terraform {
+  required_version = ">= 1.4"
+
+  backend "s3" {
+    bucket         = "jerry-test-tfstate"
+    key            = "eks/jerry-dev.tfstate"
+    region         = "ap-northeast-2"
+    profile        = "jerry-test"
+    dynamodb_table = "TerraformStateLock"
+  }
+}
+
+
 provider "aws" {
   region = local.region
   # shared_config_files=["~/.aws/config"] # Or $HOME/.aws/config

@@ -1,0 +1,37 @@
+# helm install mysql-cluster --set credentials.root.password='Password1!' -f ci/jerry-dev-values.yaml --namespace mysql-cluster --create-namespace .
+
+credentials:
+  root:
+    user: root
+    # password: sakila
+    host: "%"
+
+#serverVersion: 8.0.31
+serverInstances: 3
+routerInstances: 1 # or use router.instances
+baseServerId: 1000    
+
+#podSpec:
+#  containers:
+#  - name: mysql
+#    resources:
+#      requests:
+#        memory: "2048Mi"  # adapt to your needs
+#        cpu: "1800m"      # adapt to your needs
+#      limits:
+#        memory: "8192Mi"  # adapt to your needs
+#        cpu: "3600m"      # adapt to your needs
+
+serverConfig:
+  mycnf: |
+    [mysqld]
+    max_connections=300
+
+tls:
+  useSelfSigned: true
+
+datadirVolumeClaimTemplate:
+  accessModes:
+  resources:
+    requests:
+      storage: 10Gi
